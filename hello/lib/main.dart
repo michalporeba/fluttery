@@ -5,7 +5,7 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MaterialApp(
-    title: 'Hello World Title',
+    title: 'Hello World',
     home: Home()
   );
 }
@@ -14,7 +14,7 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
       appBar: AppBar(
-        title: Text("Hello World App"),
+        title: const Text('Hello World App'),
         backgroundColor: Colors.deepPurple,
       ),
       body: SingleChildScrollView(
@@ -33,8 +33,8 @@ class Home extends StatelessWidget {
                           )
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(5.0),
+                    const Padding(
+                      padding: EdgeInsets.all(5.0),
                       child: Text('Discover the World',
                           style: TextStyle(
                               fontSize: 20,
@@ -51,7 +51,7 @@ class Home extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.all(15.0),
                       child: ElevatedButton(
-                        child: Text('Contact us'),
+                        child: const Text('Contact us'),
                         onPressed: ()=> contactUs(context),
                       ),
                     )
@@ -66,11 +66,11 @@ class Home extends StatelessWidget {
     showDialog(
         context: context,
         builder: (BuildContext context) => AlertDialog(
-            title: Text('Contact Us'),
-            content: Text('bla bla bla'),
+            title: const Text('Contact Us'),
+            content: const Text('sendme@email.com'),
             actions: <Widget>[
               TextButton(
-                  child: Text('Close'),
+                  child: const Text('Close'),
                   onPressed: () => Navigator.of(context).pop()
               )
             ]
