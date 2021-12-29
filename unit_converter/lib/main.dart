@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 
 void main() => runApp(UnitConverterApp());
@@ -21,13 +23,15 @@ class UnitConverterApp extends StatefulWidget {
 }
 
 class UnitConverterState extends State<UnitConverterApp> {
-  double _from = 0;
+  double? _from;
   String? _fromMeasure;
   String? _toMeasure;
+  String? _result;
+  List<String> _targetMeasures = [];
 
   @override
   void initState() {
-    _from = 0;
+    _from = null;
     super.initState();
   }
 
@@ -45,7 +49,7 @@ class UnitConverterState extends State<UnitConverterApp> {
                 children:[
                   Text('Value', style: _labelStyle,),
                   TextField(
-                    onChanged: (text) => _acceptText(text),
+                    onChanged: (text) => _handleValue(text),
                     style: _inputStyle,
                       decoration: const InputDecoration(
                           hintText: 'Specify the value to be converted'
@@ -56,13 +60,26 @@ class UnitConverterState extends State<UnitConverterApp> {
                     child: Text('From', style: _labelStyle),
                   ),
                   DropdownButton<String>(
-                    items: _measures.map((String value) {
+                    items: _measures.keys.map((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
                         child: Text(value)
                       );
                     }).toList(),
-                    onChanged: (value) => setState(() {_fromMeasure = value;}),
+                    onChanged: (value) => setState(() {
+                      _result = null;
+                      _fromMeasure = value;
+                      _targetMeasures.clear();
+                      List<num> formulas = _formulas[_measures[_fromMeasure].toString()];
+                      _measures.forEach((key, value) {
+                        if (formulas[value] > 0.0 && formulas[value] != 1.0) {
+                            _targetMeasures.add(key);
+                        }
+                      });
+                      if (!_targetMeasures.contains(_toMeasure)) {
+                        _toMeasure = null;
+                      }
+                    }),
                     value: _fromMeasure,
                     isExpanded: true,
                     hint: const Text('Select original unit'),
@@ -73,26 +90,41 @@ class UnitConverterState extends State<UnitConverterApp> {
                     child: Text('To', style: _labelStyle),
                   ),
                   DropdownButton<String>(
-                      items: _measures.map((String value) {
+                      items: _targetMeasures.map((String value) {
                         return DropdownMenuItem<String>(
                             value: value,
                             child: Text(value)
                         );
                       }).toList(),
-                      onChanged: (value) => setState(() {_toMeasure = value;}),
+                      onChanged: (value) => setState(() {
+                        _toMeasure = value;
+                        _result = null;
+                      }),
                       value: _toMeasure,
                       isExpanded: true,
                       hint: const Text('Select target unit'),
                       style: _inputStyle
                   ),
                   const Spacer(),
+                  Text(_result ?? '', style: const TextStyle(
+                    fontSize: 48,
+                    color: Colors.deepOrange,
+                    fontWeight: FontWeight.bold
+                  )),
                   Padding(
                     padding: const EdgeInsets.all(32.0),
                     child: ElevatedButton(
-                        onPressed: null,
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Text('Calculate', style: _labelStyle),
+                        onPressed: _canCalculate() ? () => setState(() {
+                          List<num> formulas = _formulas[_measures[_fromMeasure].toString()];
+
+                          num formula = formulas[_measures[_toMeasure] ?? 0];
+                          _result = (formula * (_from ?? 0)).toString();
+                        }) : null,
+                        child: const Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: Text('Calculate', style: TextStyle(
+                            fontSize: 32
+                          )),
                         )
                     ),
                   )
@@ -104,16 +136,34 @@ class UnitConverterState extends State<UnitConverterApp> {
     );
   }
 
-  void _acceptText(text) {
-    double? value = double.tryParse(text);
-    if (value != null) {
-      setState(() {_from = value;});
-    }
+  void _handleValue(text) {
+    setState(() {
+      _result = null;
+      _from = double.tryParse(text);
+    });
   }
 
-  final List<String> _measures = [
-    'meters', 'kilometers', 'grams', 'kilograms', 'feet', 'miles', 'punds (lbs)', 'ounces'
-  ];
+  bool _canCalculate() {
+    return _from != null
+      && _fromMeasure != null
+      && _toMeasure != null
+      && _result == null;
+  }
+  final Map<String, int> _measures = {
+    'meters': 0, 'kilometers': 1, 'grams': 2, 'kilograms': 3,
+    'feet': 4, 'miles': 5, 'pounds (lbs)': 6, 'ounces': 7
+  };
+
+  final dynamic _formulas = {
+    '0': [1, 0.001, 0, 0, 3.28084, 0.000621371, 0, 0],
+    '1': [1000, 1, 0, 0, 3280.84, 0.621371, 0, 0],
+    '2': [0, 0, 1, 0.001, 0, 0, 0.00220462, 0.035274],
+    '3': [0, 0, 1000, 1, 0, 0, 2.20462, 35.274],
+    '4': [0.3048, 0.0003048, 0, 0, 1, 0.000189394, 0, 0],
+    '5': [1609.34, 1.60934, 0, 0, 5280, 1, 0, 0],
+    '6': [0, 0, 453.592, 0.453592, 0, 0, 1, 16],
+    '7': [0, 0, 28.3495, 0.0283495, 0, 0, 0.0625, 1]
+  };
 
   final TextStyle _labelStyle = const TextStyle(
     fontSize: 24,

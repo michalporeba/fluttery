@@ -14,4 +14,8 @@ It is the example from the second chapter in Packt's [Flutter Projects](https://
 * [There are problems](https://github.com/flutter/flutter/issues/18711) with `SingleChildScrolView` when wrapping `Spacer` widgets. (Solution for this simple app - don't do it even if it means the app won't work in landscape orientation).
 
 &nbsp;
-## Outcomes
+## Outcome
+
+| Start | Dropdown | Calculate | Result |
+| --- | --- | --- | --- |
+| ![](./images/screen-1.png) | ![](./images/screen-2.png) | ![](./images/screen-3.png) | ![](./images/screen-4.png) |
