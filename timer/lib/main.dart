@@ -28,39 +28,72 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: const Text('My Timer')),
-        body: Center(
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  const Padding(padding: EdgeInsets.all(defaultPadding)),
-                  Expanded(child: ProductivityButton(color: const Color(0xff009688), text: 'Work', onPressed: doNothing)),
-                  const Padding(padding: EdgeInsets.all(defaultPadding)),
-                  Expanded(child: ProductivityButton(color: const Color(0xff607D8B), text: 'Short Break', onPressed: doNothing)),
-                  const Padding(padding: EdgeInsets.all(defaultPadding)),
-                  Expanded(child: ProductivityButton(color: const Color(0xff455a64), text: 'Long Break', onPressed: doNothing)),
-                  const Padding(padding: EdgeInsets.all(defaultPadding)),
-                ]
+        body: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            final double availableWidth = constraints.maxWidth;
+            return Center(
+              child: Column(
+                  children: [
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          const Padding(
+                              padding: EdgeInsets.all(defaultPadding)),
+                          Expanded(child: ProductivityButton(
+                              color: const Color(0xff009688),
+                              text: 'Work',
+                              onPressed: doNothing)),
+                          const Padding(
+                              padding: EdgeInsets.all(defaultPadding)),
+                          Expanded(child: ProductivityButton(
+                              color: const Color(0xff607D8B),
+                              text: 'Short Break',
+                              onPressed: doNothing)),
+                          const Padding(
+                              padding: EdgeInsets.all(defaultPadding)),
+                          Expanded(child: ProductivityButton(
+                              color: const Color(0xff455a64),
+                              text: 'Long Break',
+                              onPressed: doNothing)),
+                          const Padding(
+                              padding: EdgeInsets.all(defaultPadding)),
+                        ]
+                    ),
+                    Expanded(
+                        child: CircularPercentIndicator(
+                          radius: availableWidth / 2,
+                          lineWidth: availableWidth / 20,
+                          percent: 0.66,
+                          center: Text("30:30", style: Theme.of(context).textTheme.headline4),
+                          progressColor: Colors.indigoAccent,
+                        )
+                    ),
+                    Row(
+                        children: [
+                          const Padding(
+                              padding: EdgeInsets.all(defaultPadding)),
+                          Expanded(child: ProductivityButton(
+                              color: const Color(0xff212121),
+                              text: 'Stop',
+                              onPressed: doNothing)),
+                          const Padding(
+                              padding: EdgeInsets.all(defaultPadding)),
+                          Expanded(child: ProductivityButton(
+                              color: const Color(0xff009688),
+                              text: 'Restart',
+                              onPressed: doNothing)),
+                          const Padding(
+                              padding: EdgeInsets.all(defaultPadding)),
+                        ]
+                    ),
+                    Container(
+                        color: Colors.blueGrey,
+                        child: const SizedBox(height: 30,)
+                    ),
+                  ]
               ),
-              const Expanded(
-                child: Text('helo')
-              ),
-              Row(
-                children: [
-                  const Padding(padding: EdgeInsets.all(defaultPadding)),
-                  Expanded(child: ProductivityButton(color: const Color(0xff212121), text: 'Stop', onPressed: doNothing)),
-                  const Padding(padding: EdgeInsets.all(defaultPadding)),
-                  Expanded(child: ProductivityButton(color: const Color(0xff009688), text: 'Restart', onPressed: doNothing)),
-                  const Padding(padding: EdgeInsets.all(defaultPadding)),
-                ]
-              ),
-              Container(
-                color: Colors.blueGrey,
-                child: const SizedBox(height: 30,)
-              ),
-            ]
-          ),
+            );
+          }
         )
     );
   }
