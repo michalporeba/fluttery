@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:timer/timer.dart';
+import './main.dart';
+import './timermodel.dart';
 
 void main() => runApp(const MyApp());
 
@@ -22,10 +25,14 @@ class MyApp extends StatelessWidget {
 }
 
 class Home extends StatelessWidget {
-  const Home({Key? key}) : super(key: key);
+  Home({Key? key}) : super(key: key);
+
+  final CountDownTimer timer = CountDownTimer();
 
   @override
   Widget build(BuildContext context) {
+    timer.startWork();
+
     return Scaffold(
         appBar: AppBar(title: const Text('My Timer')),
         body: LayoutBuilder(
@@ -60,31 +67,42 @@ class Home extends StatelessWidget {
                         ]
                     ),
                     Expanded(
-                        child: CircularPercentIndicator(
-                          radius: availableWidth / 2,
-                          lineWidth: availableWidth / 20,
-                          percent: 0.66,
-                          center: Text("30:30", style: Theme.of(context).textTheme.headline4),
-                          progressColor: Colors.indigoAccent,
-                        )
-                    ),
+                        child: StreamBuilder(
+                            initialData: '00:00',
+                            stream: timer.stream(),
+                            builder: (BuildContext context, AsyncSnapshot snapshot) {
+                              TimerModel timer = (snapshot.data == '00:00') ? TimerModel('00:00', 1) : snapshot.data;
+                              return CircularPercentIndicator(
+                                radius: availableWidth / 2,
+                                lineWidth: availableWidth / 20,
+                                percent: timer.percent,
+                                center: Text(timer.time, style: Theme
+                                    .of(context)
+                                    .textTheme
+                                    .headline4),
+                                progressColor: const Color(0xff009688),
+                              );
+                            }
+                          )
+                        ),
                     Row(
-                        children: [
+                      children: [
                           const Padding(
-                              padding: EdgeInsets.all(defaultPadding)),
+                          padding: EdgeInsets.all(defaultPadding)),
                           Expanded(child: ProductivityButton(
-                              color: const Color(0xff212121),
-                              text: 'Stop',
-                              onPressed: doNothing)),
-                          const Padding(
-                              padding: EdgeInsets.all(defaultPadding)),
-                          Expanded(child: ProductivityButton(
-                              color: const Color(0xff009688),
-                              text: 'Restart',
-                              onPressed: doNothing)),
-                          const Padding(
-                              padding: EdgeInsets.all(defaultPadding)),
-                        ]
+                          color: const Color(0xff212121),
+                          text: 'Stop',
+                          onPressed: doNothing)),
+                          const Padding
+                        (
+                          padding: EdgeInsets.all(defaultPadding)),
+                      Expanded(child: ProductivityButton(
+                          color: const Color(0xff009688),
+                          text: 'Restart',
+                          onPressed: doNothing)),
+                      const Padding(
+                          padding: EdgeInsets.all(defaultPadding)),
+                      ]
                     ),
                     Container(
                         color: Colors.blueGrey,

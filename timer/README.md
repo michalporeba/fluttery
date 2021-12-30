@@ -7,3 +7,12 @@ It is the example from the third chapter in Packt's [Flutter Projects](https://w
 
 * Custom widgets
 * [Layout Builder](https://api.flutter.dev/flutter/widgets/LayoutBuilder-class.html) - allows for a more dynamic layout choices. 
+* [Stream](https://api.flutter.dev/flutter/dart-async/Stream-class.html), [StreamBuilder](https://api.flutter.dev/flutter/widgets/StreamBuilder-class.html) and [asynchronous programming](https://dart.dev/tutorials/language/streams) in Flutter
+
+```
+Stream<TimerModel> stream() async* {
+    yield* Stream.periodic(Duration(seconds: 1), (int a) {
+        return TimerModel(...);
+    }
+}
+```
