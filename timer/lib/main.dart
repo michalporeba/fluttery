@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:timer/settings.dart';
 import 'package:timer/timer.dart';
 import './main.dart';
 import './timermodel.dart';
+import './settings.dart';
 
 void main() => runApp(const MyApp());
 
@@ -32,7 +34,24 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: const Text('My Timer')),
+        appBar: AppBar(
+            title: const Text('My Timer'),
+            actions: [
+              PopupMenuButton(
+                itemBuilder: (BuildContext context) {
+                  return [const PopupMenuItem(
+                    value: 'Settings',
+                    child: Text('Settings')
+                  )];
+                },
+                onSelected: (value) {
+                  if (value == 'Settings') {
+                    goToSettings(context);
+                  }
+                },
+              )
+            ]
+        ),
         body: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
             final double availableWidth = constraints.maxWidth;
@@ -115,6 +134,11 @@ class Home extends StatelessWidget {
   }
 
   void doNothing() {}
+  void goToSettings(BuildContext context) {
+    Navigator.push(context, MaterialPageRoute(
+      builder: (context) => SettingsScreen()
+    ));
+  }
 }
 
 class ProductivityButton extends StatelessWidget {
