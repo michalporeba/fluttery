@@ -1,39 +1,45 @@
 import 'dart:async';
 import './timermodel.dart';
+import 'package:intl/intl.dart';
 
 class CountDownTimer {
-    double _radius = 1;
-    bool _isActive = true;
-    Duration _time = Duration(seconds: 1);
-    Duration _fullTime = Duration(seconds: 1);
-    int work = 30;
+    final NumberFormat formatter = NumberFormat('00');
+    bool _isActive = false;
+    Duration _time = const Duration(seconds: 0);
+    Duration _fullTime = const Duration(seconds: 1);
+    static const _work = 30;
 
-    String returnTime(Duration t) {
-        String minutes = (t.inMinutes<10) ? '0' : '' + t.inMinutes.toString();
-        int numSeconds = t.inSeconds - (t.inMinutes * 60);
-        String seconds = (numSeconds < 10) ? '0' : '' + numSeconds.toString();
+    String returnTime(Duration t)
+        => formatter.format(t.inMinutes)
+            + ':'
+            + formatter.format(t.inSeconds - (t.inMinutes * 60));
 
-        return minutes + ':' + seconds;
+    void startWork({duration = _work}) {
+        _time = Duration(minutes: duration, seconds: 1);
+        _fullTime = Duration(minutes: duration, seconds: 0);
+        _isActive = true;
     }
 
-    void startWork() {
-        _radius = 1;
-        _time = Duration(minutes: work, seconds: 0);
-        _fullTime = Duration(minutes: work, seconds: 0);
-    }
+    void stopWork() => _isActive = false;
+
+    void restartWork() => _isActive = (_time.inSeconds > 0);
+
+    void shortBreak() => startWork(duration: 5);
+
+    void longBreak() => startWork(duration: 20);
 
     Stream<TimerModel> stream() async* {
-        yield* Stream.periodic(Duration(seconds: 1), (int a) {
-            String time;
-            if (this._isActive) {
-                _time = _time - Duration(seconds: 1);
-                _radius = _time.inSeconds / _fullTime.inSeconds;
+        yield* Stream.periodic(const Duration(seconds: 1), (int a) {
+            if (_isActive) {
+                _time = _time - const Duration(seconds: 1);
                 if (_time.inSeconds <= 0) {
                     _isActive = false;
                 }
             }
-            time = returnTime(_time);
-            return TimerModel(time, _radius);
+
+            String time = returnTime(_time);
+            double radius = _time.inSeconds / _fullTime.inSeconds;
+            return TimerModel(time, radius);
         });
     }
 }

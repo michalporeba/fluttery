@@ -31,8 +31,6 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    timer.startWork();
-
     return Scaffold(
         appBar: AppBar(title: const Text('My Timer')),
         body: LayoutBuilder(
@@ -49,19 +47,19 @@ class Home extends StatelessWidget {
                           Expanded(child: ProductivityButton(
                               color: const Color(0xff009688),
                               text: 'Work',
-                              onPressed: doNothing)),
+                              onPressed: timer.startWork)),
                           const Padding(
                               padding: EdgeInsets.all(defaultPadding)),
                           Expanded(child: ProductivityButton(
                               color: const Color(0xff607D8B),
                               text: 'Short Break',
-                              onPressed: doNothing)),
+                              onPressed: timer.shortBreak)),
                           const Padding(
                               padding: EdgeInsets.all(defaultPadding)),
                           Expanded(child: ProductivityButton(
                               color: const Color(0xff455a64),
                               text: 'Long Break',
-                              onPressed: doNothing)),
+                              onPressed: timer.longBreak)),
                           const Padding(
                               padding: EdgeInsets.all(defaultPadding)),
                         ]
@@ -92,14 +90,14 @@ class Home extends StatelessWidget {
                           Expanded(child: ProductivityButton(
                           color: const Color(0xff212121),
                           text: 'Stop',
-                          onPressed: doNothing)),
+                          onPressed: timer.stopWork)),
                           const Padding
                         (
                           padding: EdgeInsets.all(defaultPadding)),
                       Expanded(child: ProductivityButton(
                           color: const Color(0xff009688),
                           text: 'Restart',
-                          onPressed: doNothing)),
+                          onPressed: timer.restartWork)),
                       const Padding(
                           padding: EdgeInsets.all(defaultPadding)),
                       ]
