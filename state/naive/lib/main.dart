@@ -24,7 +24,7 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text('managing state - starting point')),
+        appBar: AppBar(title: const Text('managing state - naive approach')),
         body: Center(
           child: Column(
             children: const [
