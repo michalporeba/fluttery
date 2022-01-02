@@ -88,7 +88,9 @@ class HomeModel extends InheritedNotifier<HomeState> {
       ?? HomeState();
   }
 }
+```
 
+```dart
 class HomeState extends ChangeNotifier {
   double _size = 0.0;
   HomeState();
@@ -99,4 +101,24 @@ class HomeState extends ChangeNotifier {
     notifyListeners();
   }
 }
+```
+
+With the above, the `Home` widget becomes state, to hold the state. 
+
+```dart
+class Home extends StatefulWidget {
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  HomeState state = HomeState();
+
+  @override
+  Widget build(BuildContext context) {
+    return HomeModel(
+      notifier: state,
+      child: Scaffold(/*....*/)
+    )
+  }
 ```
