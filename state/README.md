@@ -6,10 +6,11 @@ The outcome is always the same, but the mechanics, and the code are different. I
 
 * [Base Project](#base-project)
 * [Naive Approach](#naive-approach)
+* [Inherited Widget](#inherited-widget)
 
-| Base | Naive |
-| --- | --- |
-| ![](./images/base.png) | ![](./images/naive.png) |
+| Base | Naive | Inherited |
+| --- | --- | --- |
+| ![](./images/base.png) | ![](./images/naive.png) | ![](./images/inherited.png) |
 
 # Implementations
 
@@ -53,5 +54,49 @@ And the slider, from its state change handler can change chart's state.
 void _valueChanged(double value) {
     setState(() { _value = value; });
     chartState.setValue(value);
+}
+```
+
+
+&nbsp;
+## Inherited Widget
+
+Another approach, is to hoist the model to a place in the element tree that is common to all of the elements. 
+
+Classes like [Inherited Widget](https://api.flutter.dev/flutter/widgets/InheritedWidget-class.html) and [Inherited Notifier](https://api.flutter.dev/flutter/widgets/InheritedNotifier-class.html) help to implement this pattern as seen in the [sample code](./inherited).
+
+The main advantage is, that the widgets below in the tree can be stateless.
+
+But this comes with an addition of two new classes defined in `model.dart`:
+
+```dart
+class HomeModel extends InheritedNotifier<HomeState> {
+  HomeModel({
+    Key? key,
+    required HomeState notifier,
+    required child
+  }) : super(key: key, notifier: notifier, child: child);
+
+  HomeState state = HomeState();
+
+  @override
+  bool updateShouldNotify(covariant HomeModel oldWidget)
+  => state.size != oldWidget.state.size;
+
+  static HomeState of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<HomeModel>()?.notifier
+      ?? HomeState();
+  }
+}
+
+class HomeState extends ChangeNotifier {
+  double _size = 0.0;
+  HomeState();
+
+  double get size => _size;
+  set size(double value) {
+    _size = value;
+    notifyListeners();
+  }
 }
 ```
