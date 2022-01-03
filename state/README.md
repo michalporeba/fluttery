@@ -7,6 +7,7 @@ The outcome is always the same, but the mechanics, and the code are different. I
 * [Base Project](#base-project)
 * [Naive Approach](#naive-approach)
 * [Inherited Widget](#inherited-widget)
+* [Scoped Model](#scoped-model)
 
 | Base | Naive | Inherited |
 | --- | --- | --- |
@@ -16,7 +17,7 @@ The outcome is always the same, but the mechanics, and the code are different. I
 
 &nbsp;
 ## Base Project
-The [code] in the base project implements the layout and behaviour of the slider. 
+The [code](./base/) in the base project implements the layout and behaviour of the slider. 
 The pie chart does not react to it as there is no state management outside of the slider widget. 
 
 There are three important files in the solution. `main.dart` is the starting point which controls the layout. `char.dart` implements `MyChar`, a pie chart using `charts_flutter` [package](https://pub.dev/packages/charts_flutter) from Google. `slider.dart` implements the `MySlider` widget responsible for the slider at the bottom of the page. 
@@ -103,7 +104,7 @@ class HomeState extends ChangeNotifier {
 }
 ```
 
-With the above, the `Home` widget becomes state, to hold the state. 
+With the above, the `Home` widget becomes stateful, to hold the state. 
 
 ```dart
 class Home extends StatefulWidget {
@@ -122,3 +123,62 @@ class _HomeState extends State<Home> {
     )
   }
 ```
+
+&nbsp;
+## Scoped Model
+
+[This implementation](./scoped/) of state uses the [scoped_model](https://pub.dev/packages/scoped_model) package. Similartly to the [Inherited Widget](#inherited-widget) above it requires a model/state class to be defined but this time it is much simpler: 
+
+```dart
+class MyModel extends Model {
+  double _size = 0.0;
+
+  double get size => _size;
+
+  set size(double value) {
+    _size = value;
+    notifyListeners();
+  }
+}
+```
+
+With that, all of my widgets can remain stateless. The state provider is introduced by adding the `ScopedModel<T>` widget in the tree, in my case in the `main.dart`: 
+
+```dart
+class Home extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ScopedModel<MyModel>(
+      model: MyModel(),
+      child: Scaffold(/*...*/)
+    );
+  }
+```
+
+And because the state is provided, both `MyChart` and `MySlider` can now remain stateless, but they have to include `ScopedModelDependant<T>` to consume the model provided by the `ScopedModel<T>` widget higher up the tree. 
+
+```dart
+class MySlider extends StatelessWidget {
+  @override
+  Widget build(BuildContext context)
+    => ScopedModelDescendant<MyModel>(
+      builder: (context, child, model) => Slider(
+            value: model.size,
+            onChanged: (value) => model.size = value
+        )
+    );
+}
+```
+
+```dart
+class MyChart extends StatelessWidget {
+  @override
+  Widget build(BuildContext context)
+    => ScopedModelDescendant<MyModel>(
+        builder: (context, child, model)
+            => charts.PieChart(_createData(model.size), animate: false)
+    );
+}
+```
+
+That's really or there is in the Scoped Model approach to state management. 
