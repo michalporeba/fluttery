@@ -8,10 +8,13 @@ The outcome is always the same, but the mechanics, and the code are different. I
 * [Naive Approach](#naive-approach)
 * [Inherited Widget](#inherited-widget)
 * [Scoped Model](#scoped-model)
+* [Provider](#provider)
 
-| Base | Naive | Inherited |
-| --- | --- | --- |
-| ![](./images/base.png) | ![](./images/naive.png) | ![](./images/inherited.png) |
+| Base | Naive | Inherited | Scoped | Provider |
+| --- | --- | --- | --- | --- |
+| ![](./images/base.png) | ![](./images/naive.png) | ![](./images/inherited.png) | ![](./images/scoped.png) | ![](./images/provider.png) |
+
+There are more approaches to state management influter and they are [well described on flutter.dev](https://docs.flutter.dev/development/data-and-backend/state-mgmt/options). Wider flutter architectures are [presented on fluttersamples.com](https://fluttersamples.com/)
 
 # Implementations
 
@@ -25,9 +28,9 @@ There are three important files in the solution. `main.dart` is the starting poi
 `main.dart` depends on both `chart.dart` and `slider.dart` but the latter two don't depend on each other.
 
 &nbsp;
-## Naive Approach
+## Naïve Approach
 
-Following the anti-example from the talk, in this naive approach to state management I store
+Following the [anti-example](./naive/) from the talk, in this naïve approach to state management I store
 the chart's state in a global variable. 
 
 ```dart
@@ -94,9 +97,9 @@ class HomeModel extends InheritedNotifier<HomeState> {
 ```dart
 class HomeState extends ChangeNotifier {
   double _size = 0.0;
-  HomeState();
 
   double get size => _size;
+
   set size(double value) {
     _size = value;
     notifyListeners();
@@ -182,3 +185,60 @@ class MyChart extends StatelessWidget {
 ```
 
 That's really or there is in the Scoped Model approach to state management. 
+
+
+&nbsp;
+## Provider
+
+[Implementation](./provider/) of state management with the [Provider](https://pub.dev/packages/provider) package is very similar to the last two. The model class is exactly the same as in the *Inherited Widget* approach, and extends from `ChangeNotifier`, but without the need to also extend `InheritedNotifier` widget. 
+
+```dart
+class MyModel extends ChangeNotifier {
+  double _size = 0.0;
+  double get size => _size;
+  set size(double value) {
+    _size = value;
+    notifyListeners();
+  }
+}
+```
+
+The recommendation is then to plug the state provider right at the top of the widget tree like so:
+
+```dart
+void main() {
+  runApp(ChangeNotifierProvider(
+    create: (context) => MyModel(),
+    child: const SampleStateApp()
+  ));
+}
+```
+
+Then, to consume or interact with the state `Consumer<T>` widget has to be used, with recommendation to use it as far down in the tree as possible. Widgets remain stateless. 
+
+```dart
+class MySlider extends StatelessWidget {
+  @override
+  Widget build(BuildContext context)
+    => Consumer<MyModel>(
+      builder: (context, model, child)
+          => Slider(
+            value: model.size,
+            onChanged: (value) => model.size = value
+          )
+    );
+}
+```
+
+```dart
+class MyChart extends StatelessWidget {
+  const MyChart({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context)
+    => Consumer<MyModel>(
+      builder: (context, model, child)
+          => charts.PieChart(_createData(model.size), animate: false,)
+    );
+}
+```
