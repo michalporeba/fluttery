@@ -10,9 +10,9 @@ The outcome is always the same, but the mechanics, and the code are different. I
 * [Scoped Model](#scoped-model)
 * [Provider](#provider)
 
-| Base | Naive | Inherited | Scoped | Provider |
-| --- | --- | --- | --- | --- |
-| ![](./images/base.png) | ![](./images/naive.png) | ![](./images/inherited.png) | ![](./images/scoped.png) | ![](./images/provider.png) |
+| Base | Naive | Inherited | Scoped | Provider | Riverpod |
+| --- | --- | --- | --- | --- | --- |
+| ![](./images/base.png) | ![](./images/naive.png) | ![](./images/inherited.png) | ![](./images/scoped.png) | ![](./images/provider.png) | ![](./images/riverpod.png) |
 
 There are more approaches to state management influter and they are [well described on flutter.dev](https://docs.flutter.dev/development/data-and-backend/state-mgmt/options). Wider flutter architectures are [presented on fluttersamples.com](https://fluttersamples.com/)
 
@@ -242,3 +242,66 @@ class MyChart extends StatelessWidget {
     );
 }
 ```
+
+&nbsp;
+## Riverpod 
+
+First immutable state management [implementation](./riverpod/) uses the [flutter_riverpod](https://pub.dev/packages/flutter_riverpod) package, based on [riverpod](https://riverpod.dev/).
+
+The model is very simple but it is immutable:
+
+```dart
+@immutable
+class MyModel {
+  final double size;
+  MyModel(this.size);
+}
+```
+
+However, to manage it, and notify the widgets about the state changes, it has to be accompanied by `StateNotifier<MyModel>` implementation and a global state provider - that's how Riverpod works, and so my `model.dart` file now also has: 
+
+```dart
+class MyStateNotifier extends StateNotifier<MyModel> {
+  MyStateNotifier() : super(MyModel(0.5));
+  void set(double value) {
+    state = MyModel(value);
+  }
+}
+
+final stateProvider = StateNotifierProvider<MyStateNotifier, MyModel>((ref) => MyStateNotifier());
+```
+
+To start using the above, we need to have the main application wrapped in the `ProviderScope` widget. 
+
+```dart 
+void main() {
+  runApp(const ProviderScope(child: SampleStateApp()));
+}
+```
+And with that addition, state consumption is as easy as: 
+
+```dart
+class MyChart extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return charts.PieChart(_createData(ref.watch(stateProvider).size), animate: false,);
+  }
+}
+```
+
+Unfortunately, the updates look not so elegant: 
+
+```dart
+class MySlider extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    MyModel state = ref.watch(stateProvider);
+    return Slider(
+            value: state.size,
+            onChanged: (value) => ref.read(stateProvider.notifier).set(value)
+      );
+  }
+}
+```
+
+But as the changes have to be implemented through a method calls, it is a very helpful method of state management for any system based on events rather than direct mutations. 
