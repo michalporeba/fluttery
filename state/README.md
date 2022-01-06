@@ -9,6 +9,7 @@ The outcome is always the same, but the mechanics, and the code are different. I
 * [Inherited Widget](#inherited-widget)
 * [Scoped Model](#scoped-model)
 * [Provider](#provider)
+* [Riverpod](#riverpod)
 
 | Base | Naive | Inherited | Scoped | Provider | Riverpod |
 | --- | --- | --- | --- | --- | --- |
