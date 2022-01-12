@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:fuxim/fuxim.dart';
-import 'package:fuxim/signin.dart';
+import 'package:fuxim_demo/signin/signing1.dart';
+import 'package:fuxim_demo/signin/signing2.dart';
+import 'package:fuxim_demo/signin/signing3.dart';
 
 void main() {
   runApp(const MyApp());
@@ -37,14 +38,13 @@ class DemoHomePage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              SampleButton(text: 'Sample Sample',
+              SampleButton(text: 'Mock Sign-in',
                   sample: SampleSet(
-                      title: 'Fake Login Page',
-                      samples: [
-                        MockSignInPage(
-                          users: 5,
-                          onSignIn: (a) => true
-                        )
+                      title: 'Mock Sign-in Page',
+                      samples: const [
+                        SignInOne(),
+                        SignInTwo(),
+                        SignInThree(),
                       ]
                   )
               ),
