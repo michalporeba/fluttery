@@ -16,14 +16,14 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const DemoHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
-class MyHomePage extends StatelessWidget {
+class DemoHomePage extends StatelessWidget {
   final String title;
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+  const DemoHomePage({Key? key, required this.title}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -31,14 +31,104 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text(title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const <Widget>[
-            MyWidget(title: 'T', message: 'M'),
-          ],
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              SampleButton(text: 'Sample Sample',
+                  sample: SampleSet(title: 'a sample', samples: const [MyWidget(title: 'T', message: 'M')])
+              ),
+              SampleButton(text: 'Fake Login Page'),
+              SampleButton(text: 'Fake Login Page'),
+              SampleButton(text: 'Fake Login Page'),
+              SampleButton(text: 'Fake Login Page'),
+              SampleButton(text: 'Fake Login Page'),
+              SampleButton(text: 'Fake Login Page'),
+              SampleButton(text: 'Fake Login Page'),
+              SampleButton(text: 'Fake Login Page'),
+              SampleButton(text: 'Fake Login Page'),
+            ],
+          ),
         ),
       ),
     );
   }
 }
+
+class SampleButton extends StatelessWidget {
+  String text;
+  Widget? sample;
+
+  SampleButton({
+    required this.text,
+    this.sample,
+    Key? key
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 1,
+            child: ElevatedButton(
+                onPressed: () => sample == null
+                    ? null
+                    : Navigator.push(context, MaterialPageRoute(builder: (context) => sample!)),
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Text(text, style: Theme.of(context).textTheme.headline4,),
+                )),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class SampleSet extends StatelessWidget {
+  String title;
+  List<Widget> samples;
+
+  SampleSet({
+    required this.title,
+    required this.samples,
+    Key? key
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final PageController controller = PageController();
+    return Scaffold(
+      appBar: AppBar(title: Text(title),
+        leading: GestureDetector(
+          onTap: () { /* Write listener code here */ },
+          child: const Icon(
+            Icons.menu,  // add custom icons also
+          ),
+        ),
+        actions: <Widget>[
+          Padding(
+              padding: EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                onTap: () { Navigator.pop(context); },
+                child: const Icon(
+                    Icons.logout
+                ),
+              )
+          ),
+        ],
+      ),
+      body: PageView(
+          controller: controller,
+          children: const <Widget>[
+            Text('one'), Text('two')
+          ]
+      ),
+    );
+  }
+}
+
