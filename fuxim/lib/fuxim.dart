@@ -15,7 +15,7 @@ class MyWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-          child: Text(title + ':: ' + message),
+          child: Text(title + '::: ' + message),
         );
   }
 }
