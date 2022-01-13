@@ -33,22 +33,24 @@ class DemoHomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text(title),
       ),
-      body: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              SampleButton(text: 'Mock Sign-in',
-                  sample: SampleSet(
-                      title: 'Mock Sign-in Page',
-                      samples: const [
-                        SignInOne(),
-                        SignInTwo(),
-                        SignInThree(),
-                      ]
-                  )
-              ),
-            ],
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                SampleButton(text: 'Sign-in',
+                    sample: SampleSet(
+                        title: 'Mock Sign-in Page',
+                        samples: const [
+                          SignInOne(),
+                          SignInTwo(),
+                          SignInThree(),
+                        ]
+                    )
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -102,31 +104,44 @@ class SampleSet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final PageController controller = PageController();
-    return Scaffold(
-      appBar: AppBar(title: Text(title),
-        leading: GestureDetector(
-          onTap: () { /* Write listener code here */ },
-          child: const Icon(
-            Icons.menu,  // add custom icons also
+    return DefaultTabController(
+      length: samples.length,
+      child: Scaffold(
+        appBar: AppBar(title: Text(title),
+          leading: GestureDetector(
+            onTap: () { /* Write listener code here */ },
+            child: const Icon(
+              Icons.menu,  // add custom icons also
+            ),
           ),
+          bottom: TabBar(
+            tabs: _generateTabs(samples.length)
+          ),
+          actions: <Widget>[
+            Padding(
+                padding: const EdgeInsets.only(right: 20.0),
+                child: GestureDetector(
+                  onTap: () { Navigator.pop(context); },
+                  child: const Icon(
+                      Icons.home
+                  ),
+                )
+            ),
+          ],
         ),
-        actions: <Widget>[
-          Padding(
-              padding: EdgeInsets.only(right: 20.0),
-              child: GestureDetector(
-                onTap: () { Navigator.pop(context); },
-                child: const Icon(
-                    Icons.logout
-                ),
-              )
-          ),
-        ],
-      ),
-      body: PageView(
-          controller: controller,
+        body: TabBarView(
           children: samples
+        )
       ),
     );
+  }
+
+  List<Widget> _generateTabs(int count) {
+    List<Widget> results = [];
+    for (int i=1; i<=count; i++) {
+       results.add(Tab(text: 'Example ' + i.toString()));
+    }
+    return results;
   }
 }
 
