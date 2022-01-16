@@ -8,10 +8,10 @@ class MyChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SizeCubit, double>(
-        builder: (context, size)
+    return BlocBuilder<ModelCubit, Model>(
+        builder: (context, model)
         {
-          return charts.PieChart(_createData(size),
+          return charts.PieChart(_createData(model.size),
             animate: false,
           );
         }

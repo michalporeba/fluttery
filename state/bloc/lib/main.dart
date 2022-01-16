@@ -16,7 +16,7 @@ class SampleStateApp extends StatelessWidget {
     return MaterialApp(
       title: 'Experiments with state',
       home: BlocProvider(
-        create: (_) => SizeCubit(),
+        create: (_) => ModelCubit(),
         child: const Home()
       )
     );

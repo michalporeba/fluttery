@@ -5,12 +5,14 @@ Inspired by the [Pragmatic State management in Flutter]() talk from Google I/O 2
 The outcome is always the same, but the mechanics, and the code are different. I have tried: 
 
 * [Base Project](#base-project)
-* [Naive Approach](#naive-approach)
+* [BLoC](#bloc)
+* [GetX](#getx)
 * [Inherited Widget](#inherited-widget)
-* [Scoped Model](#scoped-model)
+* [Naive Approach](#naive-approach)
 * [Provider](#provider)
 * [Riverpod](#riverpod)
-* [GetX](#getx)
+* [Scoped Model](#scoped-model)
+
 
 | Base | Naive | Inherited | Scoped | Provider | Riverpod |
 | --- | --- | --- | --- | --- | --- |
@@ -354,6 +356,78 @@ final Controller c = Get.find();
     return Obx(() => charts.PieChart(_createData(c.size.value),
         animate: false,
     ));
+  }
+}
+```
+
+
+&nbsp;
+## BLoC
+
+Immutable model and the Cubit to manage the state
+```dart
+class Model {
+  final double size;
+  const Model({required this.size});
+  Model copyWith({double? size}) {
+    return Model(
+      size: size ?? this.size
+    );
+  }
+}
+
+class ModelCubit extends Cubit<Model> {
+  ModelCubit() : super(const Model(size: 0.5));
+
+  void setSize(double value) => emit(state.copyWith(size: value));
+}
+```
+
+Providing the 'scope' with `BlockProvider`
+```dart
+class SampleStateApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Experiments with state',
+      home: BlocProvider(
+        create: (_) => ModelCubit(),
+        child: const Home()
+      )
+    );
+  }
+}
+```
+
+And the widgets
+```dart
+class MySlider extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ModelCubit, Model>(
+      builder: (context, model) {
+        return Slider(
+            value: model.size,
+            onChanged: (value) => context.read<ModelCubit>().setSize(value)
+        );
+      },
+    );
+  }
+}
+```
+
+```dart
+class MyChart extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ModelCubit, Model>(
+      builder: (context, model)
+      {
+        return charts.PieChart(_createData(model.size),
+          animate: false,
+        );
+      }
+    );
   }
 }
 ```
