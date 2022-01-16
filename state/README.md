@@ -10,6 +10,7 @@ The outcome is always the same, but the mechanics, and the code are different. I
 * [Scoped Model](#scoped-model)
 * [Provider](#provider)
 * [Riverpod](#riverpod)
+* [GetX](#getx)
 
 | Base | Naive | Inherited | Scoped | Provider | Riverpod |
 | --- | --- | --- | --- | --- | --- |
@@ -306,3 +307,53 @@ class MySlider extends ConsumerWidget {
 ```
 
 But as the changes have to be implemented through a method calls, it is a very helpful method of state management for any system based on events rather than direct mutations. 
+
+&nbsp;
+## GetX
+
+[GetX](https://pub.dev/packages/get), with [this sample implementation](./getx/) offers more than just state management. It requires separation of model as in a few earlier examples, but this time
+by convention the models are called controllers. (It would be possilbe to have controllers that operate on the model, but in most examples I have seen
+the controllers are the model).
+
+The controller/model appears very simply, but the basic types cannot by used.
+```dart
+class Controller {
+  var size = 0.5.obs;
+}
+```
+
+Somewhere in the tree structure we now need to create the controller, to make it available to all descendant widgets. It can by done 
+in a `build()` method of a stateless widget. 
+
+```dart
+final Controller c = Get.put(Controller());
+```
+
+The above is all the setup needed. The widgets become:
+
+```dart
+class MySlider extends StatelessWidget {
+  final Controller c = Get.find();
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() => Slider(
+        value: c.size.value,
+        onChanged: (value) => c.size(value)
+    ));
+  }
+}
+```
+
+and 
+
+```dart
+class MyChart extends StatelessWidget {
+final Controller c = Get.find();
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() => charts.PieChart(_createData(c.size.value),
+        animate: false,
+    ));
+  }
+}
+```
