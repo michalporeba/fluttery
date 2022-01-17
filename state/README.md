@@ -20,6 +20,8 @@ The outcome is always the same, but the mechanics, and the code are different. I
 
 There are more approaches to state management influter and they are [well described on flutter.dev](https://docs.flutter.dev/development/data-and-backend/state-mgmt/options). Wider flutter architectures are [presented on fluttersamples.com](https://fluttersamples.com/)
 
+Other implementations look exactly the same, so probably the six above will be enough for visual representation. 
+
 # Implementations
 
 &nbsp;
