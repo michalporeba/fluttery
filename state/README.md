@@ -433,3 +433,95 @@ class MyChart extends StatelessWidget {
   }
 }
 ```
+
+
+&nbsp;
+## Redux
+
+The 'state' setup is the most complex of the all approaches tested so far as it requires definition of the state, 
+the actions and the reducer. 
+
+```dart
+class MyState {
+  final double size;
+  const MyState({required this.size});
+
+  MyState copyWith({double? size}) {
+    return MyState(
+      size: size ?? this.size
+    );
+  }
+}
+
+class SetSizeAction {
+  final double size;
+  const SetSizeAction(this.size);
+  MyState modify(MyState state) {
+    return state.copyWith(size: size);
+  }
+}
+
+// The reducer, which takes the previous count and increments it in response
+// to an Increment action.
+MyState myReducer(MyState state, dynamic action) {
+  return state = action.modify(state);
+}
+```
+
+The application required a store 
+```dart
+void main() {
+  final store = Store<MyState>(myReducer, initialState: const MyState(size: 0.5));
+
+  runApp(SampleStateApp(store: store));
+}
+
+class SampleStateApp extends StatelessWidget {
+  final Store<MyState> store;
+  const SampleStateApp({required this.store, Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return StoreProvider<MyState>(
+      store: store,
+      child: const MaterialApp(
+        title: 'Experiments with state',
+        home: Home()
+      ),
+    );
+  }
+}
+```
+
+And finally the widgets
+```dart
+class MySlider extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return StoreBuilder<MyState>(
+        onInit: (store) => store.dispatch(const SetSizeAction(0.5)),
+        builder: (context, store) {
+          return Slider(
+              value: store.state.size,
+              onChanged: (value) => store.dispatch(SetSizeAction(value))
+          );
+        },
+    );
+  }
+}
+```
+
+```dart
+class MyChart extends StatelessWidget {
+ @override
+  Widget build(BuildContext context) {
+    return StoreBuilder<MyState>(
+      builder: (context, store) {
+        return charts.PieChart(_createData(store.state.size),
+          animate: false,
+        );
+      }
+    );
+  }
+}
+```

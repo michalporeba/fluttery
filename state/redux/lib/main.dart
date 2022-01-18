@@ -6,18 +6,18 @@ import 'slider.dart';
 import 'redux.dart';
 
 void main() {
-  final store = Store<MyModel>(myReducer, initialState: const MyModel(size: 0.5));
+  final store = Store<MyState>(myReducer, initialState: const MyState(size: 0.5));
 
   runApp(SampleStateApp(store: store));
 }
 
 class SampleStateApp extends StatelessWidget {
-  final Store<MyModel> store;
+  final Store<MyState> store;
   const SampleStateApp({required this.store, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return StoreProvider<MyModel>(
+    return StoreProvider<MyState>(
       store: store,
       child: const MaterialApp(
         title: 'Experiments with state',

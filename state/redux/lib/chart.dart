@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:flutter_redux/flutter_redux.dart';
+import 'redux.dart';
 
 class MyChart extends StatelessWidget {
   const MyChart({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return charts.PieChart(_createData(0.4),
-        animate: false,
+    return StoreBuilder<MyState>(
+      builder: (context, store) {
+        return charts.PieChart(_createData(store.state.size),
+          animate: false,
+        );
+      }
     );
   }
 

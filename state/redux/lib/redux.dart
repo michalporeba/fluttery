@@ -1,17 +1,24 @@
-enum Actions { ChangeSize }
-
-class MyModel {
+class MyState {
   final double size;
+  const MyState({required this.size});
 
-  const MyModel({required this.size});
+  MyState copyWith({double? size}) {
+    return MyState(
+      size: size ?? this.size
+    );
+  }
+}
+
+class SetSizeAction {
+  final double size;
+  const SetSizeAction(this.size);
+  MyState modify(MyState state) {
+    return state.copyWith(size: size);
+  }
 }
 
 // The reducer, which takes the previous count and increments it in response
 // to an Increment action.
-MyModel myReducer(MyModel state, dynamic action) {
-  if (action == Actions.ChangeSize) {
-    return const MyModel(size: 0.5);
-  }
-
-  return state;
+MyState myReducer(MyState state, dynamic action) {
+  return state = action.modify(state);
 }
