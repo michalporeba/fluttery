@@ -4,6 +4,8 @@ void main() {
   runApp(const MyApp());
 }
 
+const double padding = 12.0;
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -34,15 +36,13 @@ class SimpleCalculatorPage extends StatelessWidget {
       appBar: AppBar(title: Text(title),),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(padding),
           child: Column(
             children: const [
-              Spacer(),
-              Text('previous operation 1'),
-              Text('previous operation 2'),
+              History(),
               CurrentDisplay(),
               SimpleKeyboard(),
-              Padding(padding: EdgeInsets.all(8),)
+              Padding(padding: EdgeInsets.all(padding),)
             ]
           ),
         )
@@ -51,13 +51,58 @@ class SimpleCalculatorPage extends StatelessWidget {
   }
 }
 
+class History extends StatelessWidget {
+  final List<String> elements = const <String>[
+    '= 345', '+345.00', '0', '123.00', '234'
+  ];
+
+  const History({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.all(padding),
+        child: ListView.builder(
+          reverse: true,
+          itemCount: elements.length,
+          itemBuilder: (context, index) {
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [HistoryItem(value: elements[index])]
+            );
+          }
+        ),
+      ),
+    );
+  }
+}
+
+class HistoryItem extends StatelessWidget {
+  final String value;
+  const HistoryItem({
+    required this.value,
+    Key? key
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: padding, vertical: padding/2),
+      child: Text(value, style: const TextStyle(fontSize: 24, color: Colors.grey)),
+    );
+  }
+}
+
+
+
 class CurrentDisplay extends StatelessWidget {
   const CurrentDisplay({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(12.0),
+      padding: const EdgeInsets.all(padding),
       child: DecoratedBox(
           decoration: const BoxDecoration(
               color: Colors.grey
@@ -66,8 +111,8 @@ class CurrentDisplay extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text('123456',
+                  padding: const EdgeInsets.all(padding),
+                  child: Text('123,456.78',
                       overflow: TextOverflow.fade,
                       style: Theme.of(context).textTheme.headline2
                   ),
@@ -88,18 +133,19 @@ class SimpleKeyboard extends StatelessWidget {
     return SizedBox(
       child: GridView.count(
             primary: false,
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(padding),
             crossAxisCount: 4,
-            crossAxisSpacing: 8,
-            mainAxisSpacing: 8,
+            crossAxisSpacing: padding/2,
+            mainAxisSpacing: padding/2,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            childAspectRatio: 1.2,
+            childAspectRatio: 1.3,
             children: const [
-              CalculatorButton(),CalculatorButton(),CalculatorButton(),CalculatorButton(),
-              CalculatorButton(),CalculatorButton(),CalculatorButton(),CalculatorButton(),
-              CalculatorButton(),CalculatorButton(),CalculatorButton(),CalculatorButton(),
-              CalculatorButton(),CalculatorButton(),CalculatorButton(),CalculatorButton()
+              OperationButton(label: Icons.help_outline),OperationButton(label: Icons.add),OperationButton(label: Icons.add),OperationButton(label: Icons.backspace),
+              NumberButton(label: '7'),NumberButton(label: '8'),NumberButton(label: '9'),OperationButton(label: Icons.add),
+              NumberButton(label: '4'),NumberButton(label: '5'),NumberButton(label: '6'),OperationButton(label: Icons.multiply),
+              NumberButton(label: '1'),NumberButton(label: '2'),NumberButton(label: '3'),OperationButton(label: Icons.remove),
+              NumberButton(label: '0'),NumberButton(label: '.'),OperationButton(label: Icons.equalizer),OperationButton(label: Icons.add)
             ]
 
         ),
@@ -108,14 +154,30 @@ class SimpleKeyboard extends StatelessWidget {
 }
 
 
-class CalculatorButton extends StatelessWidget {
-  const CalculatorButton({Key? key}) : super(key: key);
+class NumberButton extends StatelessWidget {
+  final String label;
+
+  const NumberButton({required this.label, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-        onPressed: null,
-        child: Text('?', style: Theme.of(context).textTheme.headline2)
+        onPressed: () => true,
+        child: Text(label, style: Theme.of(context).textTheme.headline2)
+    );
+  }
+}
+
+class OperationButton extends StatelessWidget {
+  final IconData label;
+
+  const OperationButton({required this.label, Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+        onPressed: () => true,
+        child: Icon(label, size: 36, color: Colors.black)
     );
   }
 }
