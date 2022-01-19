@@ -31,13 +31,13 @@ class Rainbow extends StatelessWidget {
       body: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: const [
-            RainbowBit(color: Colors.red),
-            RainbowBit(color: Colors.orange),
-            RainbowBit(color: Colors.yellow),
-            RainbowBit(color: Colors.green),
-            RainbowBit(color: Colors.blue),
-            RainbowBit(color: Colors.indigo),
-            RainbowBit(color: Colors.deepPurple)
+            RainbowBit(color: Colors.red, name: 'red'),
+            RainbowBit(color: Colors.orange, name: 'orange'),
+            RainbowBit(color: Colors.yellow, name: 'yellow'),
+            RainbowBit(color: Colors.green, name: 'green'),
+            RainbowBit(color: Colors.blue, name: 'blue'),
+            RainbowBit(color: Colors.indigo, name: 'indigo'),
+            RainbowBit(color: Colors.deepPurple, name: 'purple')
           ]
         ),
     );
@@ -46,9 +46,11 @@ class Rainbow extends StatelessWidget {
 
 class RainbowBit extends StatelessWidget {
   final Color color;
+  final String name;
 
   const RainbowBit({
     required this.color,
+    required this.name,
     Key? key
   }) : super(key: key);
 
@@ -56,7 +58,20 @@ class RainbowBit extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
         child: DecoratedBox(
-            decoration: BoxDecoration(color: color)
+            decoration: BoxDecoration(color: color),
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 24),
+              child: Row(
+                  children: [
+                    OutlinedButton(onPressed: null,
+                        style: ButtonStyle(
+                            shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0))),
+                            backgroundColor: MaterialStateColor.resolveWith((states) => Theme.of(context).primaryColor)
+                        ),
+                        child: Text(name, style: Theme.of(context).textTheme.headline5)),
+                  ]
+              )
+            )
         )
     );
   }
