@@ -37,12 +37,35 @@ class SimpleCalculatorPage extends StatelessWidget {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(padding),
-          child: Column(
-            children: const [
-              History(),
-              Display(),
-              Keyboard(),
-            ]
+          child: OrientationBuilder(
+            builder: (context, orientation) {
+              if (orientation == Orientation.portrait) {
+                return Column
+                  (
+                    children: const [
+                      History(),
+                      Display(),
+                      Keyboard(),
+                    ]
+                );
+              } else {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Expanded(
+                      child: Column (
+                        children: const [
+                          History(),
+                          Display(),
+                       ]
+                      ),
+                    ),
+                    const Expanded(child: Keyboard())
+                  ]
+                );
+              }
+            }
           ),
         )
       ),
@@ -131,6 +154,12 @@ class Keyboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double ratio = 1.3;
+    if (MediaQuery.of(context).orientation == Orientation.landscape) {
+      Rect bounds = context.findRenderObject()?.paintBounds ?? Rect.zero;
+      ratio = bounds.width / (bounds.height - padding*6);
+    }
+
     return SizedBox(
       child: GridView.count(
             primary: false,
@@ -140,7 +169,7 @@ class Keyboard extends StatelessWidget {
             mainAxisSpacing: padding/2,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            childAspectRatio: 1.3,
+            childAspectRatio: ratio > 0 ? ratio : 1.3,
             children: [
               const OperationButton(label: Icons.help_outline, highlight: true,),
               OperationButton(label: 'x'+String.fromCharCode(0x207f)),
