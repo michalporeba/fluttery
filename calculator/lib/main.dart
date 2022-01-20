@@ -40,9 +40,8 @@ class SimpleCalculatorPage extends StatelessWidget {
           child: Column(
             children: const [
               History(),
-              CurrentDisplay(),
-              SimpleKeyboard(),
-              Padding(padding: EdgeInsets.all(padding),)
+              Display(),
+              Keyboard(),
             ]
           ),
         )
@@ -96,16 +95,18 @@ class HistoryItem extends StatelessWidget {
 
 
 
-class CurrentDisplay extends StatelessWidget {
-  const CurrentDisplay({Key? key}) : super(key: key);
+class Display extends StatelessWidget {
+  const Display({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(padding),
       child: DecoratedBox(
-          decoration: const BoxDecoration(
-              color: Colors.grey
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: const BorderRadius.all(Radius.circular(8)),
+              border: Border.all(color: Colors.blueAccent, width: 2.0, style: BorderStyle.solid)
           ),
           child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -125,8 +126,8 @@ class CurrentDisplay extends StatelessWidget {
 
 
 
-class SimpleKeyboard extends StatelessWidget {
-  const SimpleKeyboard({Key? key}) : super(key: key);
+class Keyboard extends StatelessWidget {
+  const Keyboard({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -140,14 +141,32 @@ class SimpleKeyboard extends StatelessWidget {
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             childAspectRatio: 1.3,
-            children: const [
-              OperationButton(label: Icons.help_outline),OperationButton(label: Icons.add),OperationButton(label: Icons.add),OperationButton(label: Icons.backspace),
-              NumberButton(label: '7'),NumberButton(label: '8'),NumberButton(label: '9'),OperationButton(label: Icons.add),
-              NumberButton(label: '4'),NumberButton(label: '5'),NumberButton(label: '6'),OperationButton(label: Icons.multiply),
-              NumberButton(label: '1'),NumberButton(label: '2'),NumberButton(label: '3'),OperationButton(label: Icons.remove),
-              NumberButton(label: '0'),NumberButton(label: '.'),OperationButton(label: Icons.equalizer),OperationButton(label: Icons.add)
-            ]
+            children: [
+              const OperationButton(label: Icons.help_outline, highlight: true,),
+              OperationButton(label: 'x'+String.fromCharCode(0x207f)),
+              OperationButton(label: String.fromCharCode(0x221A)),
+              const OperationButton(label: Icons.backspace, highlight: true,),
 
+              const NumberButton(label: '7'),
+              const NumberButton(label: '8'),
+              const NumberButton(label: '9'),
+              OperationButton(label: String.fromCharCode(0x00f7)),
+
+              const NumberButton(label: '4'),
+              const NumberButton(label: '5'),
+              const NumberButton(label: '6'),
+              const OperationButton(label: Icons.clear),
+
+              const NumberButton(label: '1'),
+              const NumberButton(label: '2'),
+              const NumberButton(label: '3'),
+              const OperationButton(label: Icons.add),
+
+              const NumberButton(label: '0'),
+              const NumberButton(label: '.'),
+              const OperationButton(label: '='),
+              const OperationButton(label: Icons.remove)
+            ]
         ),
     );
   }
@@ -163,21 +182,34 @@ class NumberButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
         onPressed: () => true,
-        child: Text(label, style: Theme.of(context).textTheme.headline2)
+        child: Text(label, style: const TextStyle(color: Colors.black54, fontSize: 48))
     );
   }
 }
 
 class OperationButton extends StatelessWidget {
-  final IconData label;
+  final Object label;
+  final bool highlight;
 
-  const OperationButton({required this.label, Key? key}) : super(key: key);
+  const OperationButton({
+    required this.label,
+    this.highlight = false,
+    Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-        onPressed: () => true,
-        child: Icon(label, size: 36, color: Colors.black)
+        onPressed: null,
+        child: _createLabel(label)
     );
+  }
+
+  Widget _createLabel(Object label) {
+    if (label is IconData) {
+      return Icon(label, size: 40, color: highlight? Colors.deepOrange : Colors.black54);
+    } else {
+      return Text(label as String, style: const TextStyle(color: Colors.black54, fontSize: 40));
+    }
+    return Container();
   }
 }
