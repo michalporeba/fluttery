@@ -75,7 +75,7 @@ class SimpleCalculatorPage extends StatelessWidget {
 
 class History extends StatelessWidget {
   final List<String> elements = const <String>[
-    '= 345', '+345.00', '0', '123.00', '234'
+    '= 42.00', '- 114.89', '= 156.89', '+ 123.45', '33.44'
   ];
 
   const History({Key? key}) : super(key: key);
