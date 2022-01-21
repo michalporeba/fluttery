@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const Calculator());
 }
 
 const double padding = 12.0;
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class Calculator extends StatelessWidget {
+  const Calculator({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
   @override
@@ -17,15 +17,15 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const SimpleCalculatorPage(title: 'Calculator'),
+      home: const CalculatorPage(title: 'Calculator'),
     );
   }
 }
 
-class SimpleCalculatorPage extends StatelessWidget {
+class CalculatorPage extends StatelessWidget {
   final String title;
 
-  const SimpleCalculatorPage({
+  const CalculatorPage({
     required this.title,
     Key? key
   }) : super(key: key);
