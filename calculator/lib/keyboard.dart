@@ -80,18 +80,26 @@ class OperationButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Color color = highlight
+        ? Theme.of(context).colorScheme.secondary
+        : Theme.of(context).textTheme.bodyText1?.color ?? Colors.black54;
+
     return ElevatedButton(
         onPressed: null,
-        child: _createLabel(label)
+        child: _createLabel(label, color)
     );
   }
 
-  Widget _createLabel(Object label) {
+  // label can be an icon or a text, so it has to be generated dynamically
+  Widget _createLabel(Object label, Color color) {
+    // I am not using the styles here to have more flexibility
+    // to use the accent colours on buttons to show different type of action
     if (label is IconData) {
-      return Icon(label, size: 40, color: highlight? Colors.deepOrange : Colors.black54);
+      return Icon(label, size: 40, color: color);
+    } else if (label is String) {
+      return Text(label, style: TextStyle(color: color, fontSize: 40));
     } else {
-      return Text(label as String, style: const TextStyle(color: Colors.black54, fontSize: 40));
+      return Container(); // not supported type
     }
-    return Container();
   }
 }

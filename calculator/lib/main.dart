@@ -17,8 +17,12 @@ class Calculator extends StatelessWidget {
     return MaterialApp(
       title: 'Calculator UI',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-        textTheme: Theme.of(context).textTheme.copyWith(
+        colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.blue).copyWith(
+          secondary: Colors.deepOrangeAccent,
+        ),
+        textTheme: Theme.of(context).textTheme.apply(
+            bodyColor: Colors.black54
+          ).copyWith(
           headline4: Theme.of(context).textTheme.headline4?.copyWith(
             fontSize: 24
           )
