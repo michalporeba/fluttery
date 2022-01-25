@@ -135,6 +135,13 @@
             </list>
           </value>
         </entry>
+        <entry key="scoped_model">
+          <value>
+            <list>
+              <option value="$USER_HOME$/DevTools/flutter/.pub-cache/hosted/pub.dartlang.org/scoped_model-2.0.0-nullsafety.0/lib" />
+            </list>
+          </value>
+        </entry>
         <entry key="sky_engine">
           <value>
             <list>
@@ -218,6 +225,7 @@
       <root url="file://$USER_HOME$/DevTools/flutter/.pub-cache/hosted/pub.dartlang.org/matcher-0.12.11/lib" />
       <root url="file://$USER_HOME$/DevTools/flutter/.pub-cache/hosted/pub.dartlang.org/meta-1.7.0/lib" />
       <root url="file://$USER_HOME$/DevTools/flutter/.pub-cache/hosted/pub.dartlang.org/path-1.8.0/lib" />
+      <root url="file://$USER_HOME$/DevTools/flutter/.pub-cache/hosted/pub.dartlang.org/scoped_model-2.0.0-nullsafety.0/lib" />
       <root url="file://$USER_HOME$/DevTools/flutter/.pub-cache/hosted/pub.dartlang.org/source_span-1.8.1/lib" />
       <root url="file://$USER_HOME$/DevTools/flutter/.pub-cache/hosted/pub.dartlang.org/stack_trace-1.10.0/lib" />
       <root url="file://$USER_HOME$/DevTools/flutter/.pub-cache/hosted/pub.dartlang.org/stream_channel-2.1.0/lib" />
