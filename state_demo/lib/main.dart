@@ -35,7 +35,7 @@ class Home extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(32),
                 child: SizedBox(
-                    width:50, height:50,
+                    width:150, height:150,
                     child: DecoratedBox(
                       decoration: BoxDecoration(
                       color: Theme.of(context).primaryColor
@@ -79,7 +79,7 @@ class MySlider extends StatelessWidget {
   Widget build(BuildContext context) {
     return Slider(
         value: 0.5,
-        onChanged: (value) {print(value);}
+        onChanged: (value) { print(value);}
     );
   }
 }
