@@ -2,6 +2,17 @@ import 'package:flutter/material.dart';
 import 'defaults.dart';
 
 
+class SampleStateApp extends StatelessWidget {
+  final Widget home;
+  const SampleStateApp({required this.home, Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return home;
+  }
+}
+
+
 class ColorButton extends StatelessWidget {
   final Color color;
   final String label;
@@ -67,7 +78,7 @@ class TheSquare extends StatefulWidget {
 class _TheSquareState extends State<TheSquare> {
   double width = 150;
   double height = 150;
-  Color color = Colors.blue;
+  Color color = Colors.grey;
 
   @override
   Widget build(BuildContext context) {

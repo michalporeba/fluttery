@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 //import 'starting_point.dart';
 //import 'statefull_direct.dart';
+//import 'scoped_poco.dart';
 import 'scoped_state.dart';
 
 void main() {
@@ -14,6 +15,9 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         title: 'Experiments with state',
+        theme: ThemeData(
+          primarySwatch: Colors.grey
+        ),
         home:  Scaffold(
           appBar: AppBar(title: const Text('state management example')),
           body: SafeArea(

@@ -12,16 +12,13 @@ class TheState extends Model {
   double get height => _height;
   Color get color => _color;
 
-  double getSize(String dimension) {
-    return dimension == 'width' ? _width : _height;
+  set width(double value) {
+    _width = value;
+    notifyListeners();
   }
 
-  void setSize(String dimension, double value) {
-    if (dimension == 'width') {
-      _width = value;
-    } else {
-      _height = value;
-    }
+  set height(double value) {
+    _height = value;
     notifyListeners();
   }
 
@@ -79,8 +76,14 @@ class MySlider extends StatelessWidget {
     return ScopedModelDescendant<TheState>(
       builder: (context, child, state) {
         return Slider(
-            value: state.getSize(attribute),
-            onChanged: (value) { state.setSize(attribute, value); }
+            value: attribute == 'width' ? state.width : state.height,
+            onChanged: (value) {
+              if (attribute == 'width') {
+                state.width = value;
+              } else {
+                state.height = value;
+              }
+            }
         );
       }
     );
