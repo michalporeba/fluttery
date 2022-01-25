@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'starting_point.dart';
 
 void main() {
   runApp(const SampleStateApp());
@@ -22,64 +23,39 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: const Text('state management sample')),
-        body: Center(
-          child: Column(
-            children: [
-              const Padding(
-                padding: EdgeInsets.all(32.0),
-                child: Text('00:00',
-                style: TextStyle(fontSize: 32, color: Colors.blueGrey)),
-              ),
-              const Spacer(),
-              Padding(
-                padding: const EdgeInsets.all(32),
-                child: SizedBox(
-                    width:150, height:150,
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor
-                    ),
+        appBar: AppBar(title: const Text('state management example')),
+        body: SafeArea(
+          child: Center(
+            child: Column(
+              children: [
+                const Spacer(),
+                const Padding(
+                  padding: EdgeInsets.all(32),
+                  child: TheSquare(),
+                ),
+                const Spacer(),
+                Padding(
+                  padding: const EdgeInsets.all(32),
+                  child: Column(
+                    children: [
+                      const MySlider(attribute: 'width'),
+                      const MySlider(attribute: 'height'),
+                      const Padding(padding: EdgeInsets.all(8)),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children:const [
+                          ColorButton(color: Colors.red, label: 'red'),
+                          ColorButton(color: Colors.green, label: 'green'),
+                          ColorButton(color: Colors.blue, label: 'blue')
+                        ]
+                      )
+                    ]
                   )
                 ),
-              ),
-              const Spacer(),
-              Padding(
-                padding: const EdgeInsets.all(32),
-                child: Column(
-                  children: [
-                    const MySlider(),
-                    const MySlider(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children:const [
-                        ElevatedButton(onPressed: null, child: Text('red')),
-                        ElevatedButton(onPressed: null, child: Text('green')),
-                        ElevatedButton(onPressed: null, child: Text('blue'))
-                      ]
-                    )
-                  ]
-                )
-              ),
-              const Padding(
-                  padding: EdgeInsets.all(32),
-
-              )
-            ]
-          )
+              ]
+            )
+          ),
         )
-    );
-  }
-}
-
-class MySlider extends StatelessWidget {
-  const MySlider({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Slider(
-        value: 0.5,
-        onChanged: (value) { print(value);}
     );
   }
 }

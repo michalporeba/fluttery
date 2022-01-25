@@ -1,0 +1,57 @@
+import 'package:flutter/material.dart';
+import 'defaults.dart';
+
+
+class MySlider extends StatelessWidget {
+  final String attribute;
+  final double value = 0.5;
+  const MySlider({
+    required this.attribute,
+    Key? key
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Slider(
+        value: value,
+        onChanged: (value) { print(value);}
+    );
+  }
+}
+
+
+class ColorButton extends StatelessWidget {
+  final Color color;
+  final String label;
+
+  const ColorButton({
+    required this.color,
+    required this.label,
+    Key? key
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return OutlinedButton(
+        onPressed: () => print(color),
+        child: Text(label, style: buttonStyle(color))
+    );
+  }
+}
+
+
+class TheSquare extends StatelessWidget {
+  final double width = 150;
+  final double height = 150;
+  final Color color = Colors.blue;
+  const TheSquare({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+        width:width,
+        height:height,
+        child: DecoratedBox(decoration: BoxDecoration(color: color))
+    );
+  }
+}
