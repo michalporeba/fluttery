@@ -2,24 +2,6 @@ import 'package:flutter/material.dart';
 import 'defaults.dart';
 
 
-class MySlider extends StatelessWidget {
-  final String attribute;
-  final double value = 0.5;
-  const MySlider({
-    required this.attribute,
-    Key? key
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Slider(
-        value: value,
-        onChanged: (value) { print(value);}
-    );
-  }
-}
-
-
 class ColorButton extends StatelessWidget {
   final Color color;
   final String label;
@@ -33,8 +15,26 @@ class ColorButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OutlinedButton(
-        onPressed: () => print(color),
+        onPressed: () => print('changing colour to ' + color.value.toString()),
         child: Text(label, style: buttonStyle(color))
+    );
+  }
+}
+
+
+class MySlider extends StatelessWidget {
+  final String attribute;
+  final double value = 0.5;
+  const MySlider({
+    required this.attribute,
+    Key? key
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Slider(
+        value: value,
+        onChanged: (value) { print('changing $attribute to $value');}
     );
   }
 }
