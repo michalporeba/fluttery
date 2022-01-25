@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'chart.dart';
-import 'slider.dart';
 
 void main() {
   runApp(const SampleStateApp());
@@ -24,7 +22,7 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: const Text('managing state sample')),
+        appBar: AppBar(title: const Text('state management sample')),
         body: Center(
           child: Column(
             children: [
@@ -70,6 +68,18 @@ class Home extends StatelessWidget {
             ]
           )
         )
+    );
+  }
+}
+
+class MySlider extends StatelessWidget {
+  const MySlider({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Slider(
+        value: 0.5,
+        onChanged: (value) {print(value);}
     );
   }
 }

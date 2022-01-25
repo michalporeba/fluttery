@@ -1,5 +1,5 @@
-name: base
-description: A new Flutter project.
+name: state_demo
+description: A sample to explore different ways to manage state
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
