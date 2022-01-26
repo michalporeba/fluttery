@@ -8,7 +8,7 @@ class TheState {
   final double height;
   final Color color;
 
-  TheState({
+  const TheState({
     required this.width,
     required this.height,
     required this.color
