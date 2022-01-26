@@ -1,8 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:bloc/bloc.dart';
+
+class State {
+  final bool showLabels;
+  const State({this.showLabels = true});
+  State flip() => State(showLabels: !showLabels);
+}
+
+class StateCubit extends Cubit<State> {
+  StateCubit() : super(const State());
+  void flipShowLabels() => emit(state.flip());
+}
 
 void main() {
-  runApp(const MyApp());
+  runApp(BlocProvider(
+    create: (_) => StateCubit(),
+    child: const MyApp()
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -17,6 +33,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.grey,
       ),
       home: const Rainbow(),
+
     );
   }
 }
@@ -40,6 +57,14 @@ class Rainbow extends StatelessWidget {
             RainbowBit(color: Colors.deepPurple, name: 'purple')
           ]
         ),
+      floatingActionButton: BlocBuilder<StateCubit, State>(
+        builder: (context, model) {
+          return FloatingActionButton(
+              onPressed: () => context.read<StateCubit>().flipShowLabels(),
+              child: Icon(model.showLabels ? Icons.font_download : Icons.clear)
+          );
+        }
+      )
     );
   }
 }
@@ -56,23 +81,28 @@ class RainbowBit extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-        child: DecoratedBox(
-            decoration: BoxDecoration(color: color),
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24),
-              child: Row(
-                  children: [
-                    OutlinedButton(onPressed: null,
-                        style: ButtonStyle(
-                            shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0))),
-                            backgroundColor: MaterialStateColor.resolveWith((states) => Theme.of(context).primaryColor)
-                        ),
-                        child: Text(name, style: Theme.of(context).textTheme.headline5)),
-                  ]
+    return BlocBuilder<StateCubit, State>(
+        builder: (context, model) {
+          return Expanded(
+              child: DecoratedBox(
+                  decoration: BoxDecoration(color: color),
+                  child: model.showLabels
+                    ? Container() : Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: Row(
+                          children: [
+                            OutlinedButton(onPressed: null,
+                                style: ButtonStyle(
+                                    shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0))),
+                                    backgroundColor: MaterialStateColor.resolveWith((states) => Theme.of(context).primaryColor)
+                                ),
+                                child: Text(name, style: Theme.of(context).textTheme.headline5)),
+                          ]
+                      )
+                  )
               )
-            )
-        )
+          );
+        }
     );
   }
 }
