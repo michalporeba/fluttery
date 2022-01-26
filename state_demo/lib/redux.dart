@@ -104,7 +104,6 @@ class ColorButton extends StatelessWidget {
 
 class MySlider extends StatelessWidget {
   final String attribute;
-  final double value = 0.5;
   const MySlider({
     required this.attribute,
     Key? key
@@ -127,9 +126,6 @@ class MySlider extends StatelessWidget {
 
 
 class TheSquare extends StatelessWidget {
-  final double width = 150;
-  final double height = 150;
-  final Color color = Colors.grey;
   const TheSquare({Key? key}) : super(key: key);
 
   @override
