@@ -3,9 +3,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bloc/bloc.dart';
 
 void main() {
-  runApp(BlocProvider(
-    create: (_) => ValueBloc(),
-    child: const MyApp()
+  runApp(MultiBlocProvider(
+    providers: [
+      BlocProvider(create: (_) => ValueBloc()),
+      BlocProvider(create: (_) => FizzBloc()),
+      BlocProvider(create: (_) => BuzzBloc())
+    ],
+    child: MultiBlocListener(
+        listeners: [
+         
+        ],
+        child: const MyApp())
   ));
 }
 
@@ -27,9 +35,42 @@ class SetValue extends ValueEvent {
   int modify(int state) => value;
 }
 
+class CounterState {
+  final bool isOn;
+  final int count;
+  const CounterState(this.isOn, this.count);
+}
+
+abstract class CounterEvent {
+  const CounterEvent();
+  CounterState modify(CounterState state);
+}
+
+class TurnOn extends CounterEvent {
+  @override
+  CounterState modify(CounterState state) => CounterState(true, state.count);
+}
+
+class TurnOff extends CounterEvent {
+  @override
+  CounterState modify(CounterState state) => CounterState(false, state.count);
+}
+
 class ValueBloc extends Bloc<ValueEvent, int> {
   ValueBloc(): super(0) {
     on<ValueEvent>((event, emit) => emit(event.modify(state)));
+  }
+}
+
+class FizzBloc extends Bloc<CounterEvent, CounterState> {
+  FizzBloc(): super(const CounterState(false, 0)) {
+    on<CounterEvent>((event, emit) => emit(event.modify(state)));
+  }
+}
+
+class BuzzBloc extends Bloc<CounterEvent, CounterState> {
+  BuzzBloc(): super(const CounterState(false, 0)) {
+    on<CounterEvent>((event, emit) => emit(event.modify(state)));
   }
 }
 
@@ -79,13 +120,47 @@ class Display extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ValueBloc, int>(
-      builder: (context, state) {
         return Row(
-          children: [Text(state.toString())]
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: const [
+            FizzDisplay(),
+            ValueDisplay(),
+            BuzzDisplay(),
+          ]
         );
+  }
+}
+
+class FizzDisplay extends StatelessWidget {
+  const FizzDisplay({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text('Fizz', style: Theme.of(context).textTheme.headline2);
+  }
+}
+
+class BuzzDisplay extends StatelessWidget {
+  const BuzzDisplay({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text('Buzz', style: Theme.of(context).textTheme.headline2);
+  }
+}
+
+class ValueDisplay extends StatelessWidget {
+  const ValueDisplay({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ValueBloc, int>(
+        builder: (context, state) {
+          return Text(state.toString(), style: Theme
+              .of(context)
+              .textTheme
+              .headline2);
       }
     );
   }
 }
-

@@ -21,6 +21,7 @@ I will keep the examples with my comments here, publicly available, so I can eas
 * [dart.academy - immutable patterns](https://dart.academy/immutable-data-patterns-in-dart-and-flutter/)
 * [flutter gems](https://fluttergems.dev/)
 * [getwidget](https://pub.dev/packages/getwidget) - MIT licensed widgets
+* [stream blocs and concurrency](https://verygood.ventures/blog/how-to-use-bloc-with-streams-and-concurrency)
 
 ## a bit less useful resources
 
