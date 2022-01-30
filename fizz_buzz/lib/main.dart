@@ -11,7 +11,10 @@ void main() {
     ],
     child: MultiBlocListener(
         listeners: [
-         
+         BlocListener<ValueBloc, int>(listener: (context, state) {
+           BlocProvider.of<FizzBloc>(context).add(state % 3 == 0 && state != 0 ? TurnOn() : TurnOff());
+           BlocProvider.of<BuzzBloc>(context).add(state % 5 == 0 && state != 0 ? TurnOn() : TurnOff());
+         })
         ],
         child: const MyApp())
   ));
@@ -97,6 +100,11 @@ class MyHomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Streaming Fizz Buzz'),
+        actions: [
+         TextButton(onPressed: () {
+          BlocProvider.of<ValueBloc>(context).add(const SetValue(0));
+         }, child: const Icon(Icons.clear, color: Colors.white))
+        ]
       ),
       body: Center(
         child: Column(
@@ -136,7 +144,13 @@ class FizzDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text('Fizz', style: Theme.of(context).textTheme.headline2);
+    return BlocBuilder<FizzBloc, CounterState>(
+      builder: (context, state) {
+        return Text('Fizz', style: Theme.of(context).textTheme.headline2?.copyWith(
+          color: state.isOn ? Colors.red : Colors.grey
+        ));
+      }
+    );
   }
 }
 
@@ -145,7 +159,13 @@ class BuzzDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text('Buzz', style: Theme.of(context).textTheme.headline2);
+    return BlocBuilder<BuzzBloc, CounterState>(
+        builder: (context, state) {
+          return Text('Buzz', style: Theme.of(context).textTheme.headline2?.copyWith(
+              color: state.isOn ? Colors.red : Colors.grey
+          ));
+        }
+    );
   }
 }
 
