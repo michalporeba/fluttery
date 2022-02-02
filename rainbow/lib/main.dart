@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bloc/bloc.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class State {
   final bool showLabels;
@@ -48,13 +51,13 @@ class Rainbow extends StatelessWidget {
       body: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: const [
-            RainbowBit(color: Colors.red, name: 'red'),
-            RainbowBit(color: Colors.orange, name: 'orange'),
-            RainbowBit(color: Colors.yellow, name: 'yellow'),
-            RainbowBit(color: Colors.green, name: 'green'),
-            RainbowBit(color: Colors.blue, name: 'blue'),
-            RainbowBit(color: Colors.indigo, name: 'indigo'),
-            RainbowBit(color: Colors.deepPurple, name: 'purple')
+            RainbowBit(color: Colors.red, name: 'red', sound: 'note1.wav'),
+            RainbowBit(color: Colors.orange, name: 'orange', sound: 'note2.wav'),
+            RainbowBit(color: Colors.yellow, name: 'yellow', sound: 'note3.wav'),
+            RainbowBit(color: Colors.green, name: 'green', sound: 'note4.wav'),
+            RainbowBit(color: Colors.blue, name: 'blue', sound: 'note5.wav'),
+            RainbowBit(color: Colors.indigo, name: 'indigo', sound: 'note6.wav'),
+            RainbowBit(color: Colors.deepPurple, name: 'purple', sound: 'note7.wav')
           ]
         ),
       floatingActionButton: BlocBuilder<StateCubit, State>(
@@ -72,10 +75,12 @@ class Rainbow extends StatelessWidget {
 class RainbowBit extends StatelessWidget {
   final Color color;
   final String name;
+  final String sound;
 
   const RainbowBit({
     required this.color,
     required this.name,
+    required this.sound,
     Key? key
   }) : super(key: key);
 
@@ -84,22 +89,37 @@ class RainbowBit extends StatelessWidget {
     return BlocBuilder<StateCubit, State>(
         builder: (context, model) {
           return Expanded(
-              child: DecoratedBox(
-                  decoration: BoxDecoration(color: color),
-                  child: model.showLabels
-                    ? Container() : Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: Row(
-                          children: [
-                            OutlinedButton(onPressed: null,
-                                style: ButtonStyle(
-                                    shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0))),
-                                    backgroundColor: MaterialStateColor.resolveWith((states) => Theme.of(context).primaryColor)
-                                ),
-                                child: Text(name, style: Theme.of(context).textTheme.headline5)),
-                          ]
-                      )
-                  )
+              child: GestureDetector(
+                onTap: () async {
+                  final AudioPlayer audioPlayer = AudioPlayer();
+                  audioPlayer.setVolume(1);
+                  sleep(const Duration(milliseconds: 100));
+                  print(sound);
+                  audioPlayer.onPlayerError(() {
+
+                  })
+                  int result = await audioPlayer.play('assets/$sound', isLocal: true);
+                  if (result == 1) {
+                    print('done');
+                  }
+                },
+                child: DecoratedBox(
+                    decoration: BoxDecoration(color: color),
+                    child: model.showLabels
+                      ? Container() : Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        child: Row(
+                            children: [
+                              OutlinedButton(onPressed: null,
+                                  style: ButtonStyle(
+                                      shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0))),
+                                      backgroundColor: MaterialStateColor.resolveWith((states) => Theme.of(context).primaryColor)
+                                  ),
+                                  child: Text(name, style: Theme.of(context).textTheme.headline5)),
+                            ]
+                        )
+                    )
+                ),
               )
           );
         }
