@@ -17,6 +17,8 @@ class StateCubit extends Cubit<State> {
   void flipShowLabels() => emit(state.flip());
 }
 
+final AudioCache audioPlayer = AudioCache();
+
 void main() {
   runApp(BlocProvider(
     create: (_) => StateCubit(),
@@ -57,7 +59,7 @@ class Rainbow extends StatelessWidget {
             RainbowBit(color: Colors.green, name: 'green', sound: 'note4.wav'),
             RainbowBit(color: Colors.blue, name: 'blue', sound: 'note5.wav'),
             RainbowBit(color: Colors.indigo, name: 'indigo', sound: 'note6.wav'),
-            RainbowBit(color: Colors.deepPurple, name: 'purple', sound: 'note7.wav')
+            RainbowBit(color: Colors.deepPurple, name: 'purple', sound: 'note7.wav')  
           ]
         ),
       floatingActionButton: BlocBuilder<StateCubit, State>(
@@ -91,17 +93,7 @@ class RainbowBit extends StatelessWidget {
           return Expanded(
               child: GestureDetector(
                 onTap: () async {
-                  final AudioPlayer audioPlayer = AudioPlayer();
-                  audioPlayer.setVolume(1);
-                  sleep(const Duration(milliseconds: 100));
-                  print(sound);
-                  audioPlayer.onPlayerError(() {
-
-                  })
-                  int result = await audioPlayer.play('assets/$sound', isLocal: true);
-                  if (result == 1) {
-                    print('done');
-                  }
+                  audioPlayer.play('sounds/$sound');
                 },
                 child: DecoratedBox(
                     decoration: BoxDecoration(color: color),
