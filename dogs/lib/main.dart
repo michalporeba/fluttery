@@ -120,10 +120,9 @@ class _PrepareRequestPopupState extends State<PrepareRequestPopup> {
       ),
       actions: <Widget>[
         TextButton(
-          child: const Text('Approve'),
+          child: const Text('Get me the dogs!'),
           onPressed: () {
             if (_formKey.currentState!.validate()) {
-              print('valid');
               Navigator.of(context).pop(int.parse(_dogsNumberController.text));
             }
           },
