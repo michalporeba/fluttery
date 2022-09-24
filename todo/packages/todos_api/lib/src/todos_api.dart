@@ -1,14 +1,15 @@
-// Copyright (c) 2022, Very Good Ventures
-// https://verygood.ventures
-//
-// Use of this source code is governed by an MIT-style
-// license that can be found in the LICENSE file or at
-// https://opensource.org/licenses/MIT.
+import 'package:todos_api/todos_api.dart';
 
-/// {@template todos_api}
-/// The interface and models for an API providing access to todos.
-/// {@endtemplate}
-class TodosApi {
-  /// {@macro todos_api}
+abstract class TodosApi {
   const TodosApi();
+
+  Stream<List<Todo>> getTodos();
+
+  Future<void> saveTodo(Todo todo);
+
+  Future<void> deleteTodo(String id);
+
+  Future<int> clearCompleted();
+
+  Future<int> completeAll({required bool isCompleted});
 }
